@@ -7,9 +7,11 @@ interface TestContextValue {
   n: number
 }
 
-function useValue (props: {
+interface TestProviderProps {
   n: number
-}): TestContextValue {
+}
+
+function useValue (props: TestProviderProps): TestContextValue {
   const value = { n: props.n }
   return value
 }
