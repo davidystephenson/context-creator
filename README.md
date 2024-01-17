@@ -7,31 +7,31 @@ interface CounterProviderProps {
   initialCount: number
 }
 
-interface TestContextValue {
-  counter: number
+interface CounterContextValue {
+  count: number
   increment: () => void
 }
 
-function useValue (props: TestProviderProps): TestContextValue {
-  const [counter, setCounter] = useState(props.initialCount)
+function useCounter (props: CounterProviderProps): CounterContextValue {
+  const [count, setCount] = useState(props.initialCount)
   function increment () {
-    setCounter(current => current + 1)
+    setCount(current => current + 1)
   }
-  const value = { counter, increment }
+  const value = { count, increment }
   return value
 }
 
 const {
-  useCreatedContext: useTest,
-  CreatedProvider: TestProvider, 
-} = contextCreator({ name: 'test', useValue })
+  useCreatedContext: useCounter,
+  CreatedProvider: CounterProvider, 
+} = contextCreator({ name: 'counter', useValue })
 
-export default function TestConsumer () {
-  const test = useTest()
+export default function CounterConsumer () {
+  const counter = useCounter()
   return (
     <>
-      Count: {test.counter}
-      <button onClick={test.increment}>Increment</button>
+      Count: {counter.count}
+      <button onClick={counter.increment}>Increment</button>
     </>
   )
 }
