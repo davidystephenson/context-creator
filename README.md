@@ -1,8 +1,8 @@
 # Context Creator
 
-```js
-import { contextCreator } from 'context-creator'
+## Without Context Creator
 
+```js
 interface CounterProviderProps {
   initialCount: number
 }
@@ -12,21 +12,31 @@ interface CounterContextValue {
   increment: () => void
 }
 
-function useCounter (props: CounterProviderProps): CounterContextValue {
+const counterContext = createContext<CounterContextValue | undefined>(undefined)
+
+function useCounter (): CounterContextValue {
+  const value = useContext(counterContext)
+  if (value == null) {
+    const message = `useContext must be used within a ContextProvider`
+    throw new Error(message)
+  }
+  return value
+}
+
+function CounterProvider (props: CounterProviderProps): JSX.Element {
   const [count, setCount] = useState(props.initialCount)
   function increment () {
     setCount(current => current + 1)
   }
   const value = { count, increment }
-  return value
+  return (
+    <createdContext.Provider value={value}>
+      {providerProps.children}
+    </createdContext.Provider>
+  )
 }
 
-const {
-  useCreatedContext: useCounter,
-  CreatedProvider: CounterProvider, 
-} = contextCreator({ name: 'counter', useValue: useCounter })
-
-export default function CounterConsumer () {
+function CounterConsumer () {
   const counter = useCounter()
   return (
     <>
@@ -38,12 +48,14 @@ export default function CounterConsumer () {
 
 function App() {
   return (
-    <TestProvider initialCount={5}>
-      <TestConsumer />
-    </TestProvider>
+    <CounterProvider initialCount={5}>
+      <CounterConsumer />
+    </CounterProvider>
   )
 }
 ```
+
+## With Context Creator
 
 ```js
 import { contextCreator } from 'context-creator'
@@ -71,7 +83,7 @@ const {
   CreatedProvider: CounterProvider, 
 } = contextCreator({ name: 'counter', useValue: useCounter })
 
-export default function CounterConsumer () {
+function CounterConsumer () {
   const counter = useCounter()
   return (
     <>
