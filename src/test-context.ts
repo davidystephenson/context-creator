@@ -1,13 +1,21 @@
 import { contextCreator } from './context-creator/context-creator'
+import { useState } from 'react'
 
-interface TestContextValue {
+interface TestProviderProps {
   n: number
 }
 
-function useValue (props: {
+interface TestContextValue {
   n: number
-}): TestContextValue {
-  const value = { n: props.n }
+  increment: () => void
+}
+
+function useValue (props: TestProviderProps): TestContextValue {
+  const [n, setN] = useState(props.n)
+  function increment () {
+    setN(n + 1)
+  }
+  const value = { n, increment }
   return value
 }
 

@@ -3,16 +3,21 @@
 ```js
 import { contextCreator } from 'context-creator'
 
-interface TestContextValue {
-  n: number
-}
-
 interface TestProviderProps {
   n: number
 }
 
+interface TestContextValue {
+  n: number
+  increment: () => void
+}
+
 function useValue (props: TestProviderProps): TestContextValue {
-  const value = { n: props.n }
+  const [n, setN] = useState(props.n)
+  function increment () {
+    setN(n + 1)
+  }
+  const value = { n, increment }
   return value
 }
 
@@ -21,10 +26,13 @@ const {
   CreatedProvider: TestProvider, 
 } = contextCreator({ name: 'test', useValue })
 
-function TestConsumer () {
+export default function TestConsumer () {
   const test = useTest()
   return (
-    <>N: {test.n}</>
+    <>
+      N: {test.n}
+      <button onClick={test.increment}>Increment</button>
+    </>
   )
 }
 
