@@ -24,7 +24,7 @@ function useCounter (props: CounterProviderProps): CounterContextValue {
 const {
   useCreatedContext: useCounter,
   CreatedProvider: CounterProvider, 
-} = contextCreator({ name: 'counter', useValue })
+} = contextCreator({ name: 'counter', useValue: useCounter })
 
 export default function CounterConsumer () {
   const counter = useCounter()
