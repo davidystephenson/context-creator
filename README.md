@@ -69,7 +69,7 @@ interface CounterContextValue {
   increment: () => void
 }
 
-function useCounter (props: CounterProviderProps): CounterContextValue {
+function useValue (props: CounterProviderProps): CounterContextValue {
   const [count, setCount] = useState(props.initialCount)
   function increment () {
     setCount(current => current + 1)
@@ -81,7 +81,7 @@ function useCounter (props: CounterProviderProps): CounterContextValue {
 const {
   useCreatedContext: useCounter,
   CreatedProvider: CounterProvider, 
-} = contextCreator({ name: 'counter', useValue: useCounter })
+} = contextCreator({ name: 'counter', useValue })
 
 function CounterConsumer () {
   const counter = useCounter()
