@@ -3,10 +3,6 @@
 ## Without Context Creator
 
 ```js
-interface CounterProviderProps {
-  initialCount: number
-}
-
 interface CounterContextValue {
   count: number
   increment: () => void
@@ -23,7 +19,9 @@ function useCounter (): CounterContextValue {
   return value
 }
 
-function CounterProvider (props: CounterProviderProps): JSX.Element {
+function CounterProvider (props: {
+  initialCount: number
+}): JSX.Element {
   const [count, setCount] = useState(props.initialCount)
   function increment () {
     setCount(current => current + 1)
@@ -60,16 +58,9 @@ function App() {
 ```js
 import { contextCreator } from 'context-creator'
 
-interface CounterProviderProps {
+function useValue (props: {
   initialCount: number
-}
-
-interface CounterContextValue {
-  count: number
-  increment: () => void
-}
-
-function useValue (props: CounterProviderProps): CounterContextValue {
+}) {
   const [count, setCount] = useState(props.initialCount)
   function increment () {
     setCount(current => current + 1)
