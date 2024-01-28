@@ -48,7 +48,12 @@ function App() {
 
 ## Problem
 
-Creating and using React contexts out of the box requires repeating boilerplate code for each new context including defining a context type, creating a context, defining a hook to consume the context, and defining a provider component that wraps the internal context provider.
+Creating and using React contexts out of the box requires repeating boilerplate code for each new context:
+
+* defining a context type
+* creating a context
+* defining a hook to consume the context
+* defining a provider component that wraps the internal context provider
 
 ### Without Context Creator
 
@@ -111,7 +116,7 @@ Context creator minimizes this boilerplate.
 The `contextCreator` function defines the context, the provider, and consuming hooks for you.
 For TypeScript developers, it also infers the type of the context value and the provider's props.
 
-You define a single hook named `useValue`.
+You define a hook named `useValue`.
 The hook should take a single argument to receive the props passed to the created Provider.
 `contextCreator` will infer the type of the created Provider's props from this argument.
 `useValue`'s return value will be the passed to the internal context provider as it's `value` prop that can be consumed by any child component.
