@@ -9,7 +9,7 @@ npm install context-creator
 ## Usage
 
 ```TSX
-import { contextCreator } from 'context-creator'
+import contextCreator from 'context-creator'
 
 function useValue (props: {
   initialCount: number
@@ -53,6 +53,8 @@ Creating and using React contexts out of the box requires repeating boilerplate 
 ### Without Context Creator
 
 ```TSX
+import { createContext, useContext } from 'react'
+
 interface CounterContextValue {
   count: number
   increment: () => void
@@ -129,7 +131,7 @@ The object includes properties for the provider and hooks to consume the context
 ### With Context Creator
 
 ```TSX
-import { contextCreator } from 'context-creator'
+import contextCreator from 'context-creator'
 
 function useValue (props: {
   initialCount: number
@@ -172,7 +174,7 @@ The created `useContext` hook will throw an error if used outside a provider.
 If you need to consume the context in a component that might be rendered outside a provider, call the `useOptionalContext` hook also returned by `contextCreator`.
 
 ```TSX
-import { contextCreator } from 'context-creator'
+import contextCreator from 'context-creator'
 
 function useValue (props: {
   initialCount: number
@@ -220,7 +222,7 @@ function App() {
 In a minimal implementation, `contextCreator` can be called and used in a single file without destructuring:
 
 ```TSX
-import { contextCreator } from 'context-creator'
+import contextCreator from 'context-creator'
 
 function useValue (props: {
   initialCount: number
@@ -260,7 +262,7 @@ The functions `contextCreator` returns can be immediately destructured, aliased,
 ### contexts/counter.ts
 
 ```TypeScript
-import { contextCreator } from 'context-creator'
+import contextCreator from 'context-creator'
 
 function useValue (props: {
   initialCount: number

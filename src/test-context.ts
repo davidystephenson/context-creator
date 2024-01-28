@@ -1,4 +1,4 @@
-import { contextCreator } from './context-creator/context-creator'
+import contextCreator from './context-creator/context-creator'
 import { useState } from 'react'
 
 interface TestProviderProps {
