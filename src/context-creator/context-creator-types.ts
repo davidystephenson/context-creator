@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 export interface ContextCreation <ContextValue, ProviderProps> {
-  useCreatedContext: () => ContextValue
-  useCreatedContextUnsafe: () => ContextValue | undefined
-  CreatedProvider: React.FC<{ children: ReactNode } & ProviderProps>
+  useContext: () => ContextValue
+  useOptionalContext: () => ContextValue | undefined
+  Provider: React.FC<{ children: ReactNode } & ProviderProps>
 }

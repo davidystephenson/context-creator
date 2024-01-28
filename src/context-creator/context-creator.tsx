@@ -1,27 +1,30 @@
-import { createContext, useContext, ReactNode } from 'react'
+import React from 'react'
 import { ContextCreation } from './context-creator-types'
+
+export * from'./context-creator-types'
+
 export function contextCreator <ContextValue, ProviderProps> (props: {
   useValue: (props: ProviderProps) => ContextValue
   name: string
 }): ContextCreation<ContextValue, ProviderProps> {
-  const createdContext = createContext<ContextValue | undefined>(undefined)
+  const createdContext = React.createContext<ContextValue | undefined>(undefined)
 
-  function useCreatedContext (): ContextValue {
-    const value = useContext(createdContext)
+  function useContext (): ContextValue {
+    const value = React.useContext(createdContext)
     if (value == null) {
-      const message = `(${props.name}) useCreatedContext must be used within a ContextProvider`
+      const message = `(${props.name}) useContext must be used within a Provider`
       throw new Error(message)
     }
     return value
   }
 
-  function useCreatedContextUnsafe (): ContextValue | undefined {
-    const value = useContext(createdContext)
+  function useOptionalContext (): ContextValue | undefined {
+    const value = React.useContext(createdContext)
     return value
   }
 
-  function CreatedProvider (providerProps: {
-    children: ReactNode
+  function Provider (providerProps: {
+    children: React.ReactNode
   } & ProviderProps): JSX.Element {
     const value = props.useValue(providerProps)
     return (
@@ -32,8 +35,10 @@ export function contextCreator <ContextValue, ProviderProps> (props: {
   }
 
   return {
-    useCreatedContext,
-    useCreatedContextUnsafe,
-    CreatedProvider
+    useContext,
+    useOptionalContext,
+    Provider
   }
 }
+
+export default contextCreator
