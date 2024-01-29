@@ -70,7 +70,7 @@ const counterContext = createContext<CounterContextValue | undefined>(undefined)
 function useCounter (): CounterContextValue {
   const value = useContext(counterContext)
   if (value == null) {
-    const message = `useContext must be used within a ContextProvider`
+    const message = `useContext must be used within a Provider`
     throw new Error(message)
   }
   return value
@@ -117,13 +117,13 @@ The `contextCreator` function defines the context, the provider, and consuming h
 For TypeScript developers, it also infers the type of the context value and the provider's props.
 
 You define a hook named `useValue`.
-The hook should take a single argument to receive the props passed to the created Provider.
+The hook should take a single argument to receive the props passed to the created provider.
 `contextCreator` will infer the type of the created Provider's props from this argument.
 `useValue`'s return value will be the passed to the internal context provider as it's `value` prop that can be consumed by any child component.
-`contextCreator` will infer the type of the created context's value from this return value and return a hook that consumes the context.
-The hook will either return the provided context value or throw an error if called outside of a Provider.
+`contextCreator` will infer the type of the created context's value from this return value.
+`contextCreator` also creates a hook that returns the provided context value or throw an error if called outside of a provider.
 
-To create the provider and hooks, call `contextCreator` and pass a single object with two properties: `name`, and `useValue`.
+To create the provider and hooks, call `contextCreator` and pass a single object with two properties: `name` and `useValue`.
 
 * `name` should be a string is used to identify the context in error messages.
 * `useValue` should be a hook that will be called inside the provider.
