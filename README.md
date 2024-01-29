@@ -215,7 +215,7 @@ function App() {
       <RequiredConsumer />
 
 
-      {/* Returns "Unknown counter" with no error */}
+      {/* Renders "Unknown counter" with no error */}
       <OptionalConsumer />
     </>
   )
