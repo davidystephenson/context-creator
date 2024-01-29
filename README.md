@@ -264,7 +264,7 @@ function App() {
 Typically the context is created in its own file and exported.
 The functions `contextCreator` returns can be immediately destructured, aliased, and exported in a single statement.
 
-### contexts/counter.ts
+### context/counter.ts
 
 ```TypeScript
 import contextCreator from 'context-creator'
@@ -286,10 +286,10 @@ export const {
 } = contextCreator({ name: 'counter', useValue })
 ```
 
-### components/counter-consumer.tsx
+### component/CounterConsumer.tsx
 
 ```TSX
-import { useCounter} from '../contexts/counter'
+import { useCounter} from '../context/counter'
 
 function CounterConsumer () {
   const counter = useContext()
@@ -302,7 +302,7 @@ function CounterConsumer () {
 }
 ```
 
-### app.tsx
+### App.tsx
 
 ```TSX
 import { CounterProvider } from './contexts/counter'
