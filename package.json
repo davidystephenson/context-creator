@@ -39,5 +39,13 @@
   "bugs": {
     "url": "https://github.com/davidystephenson/context-creator/issues"
   },
-  "homepage": "https://github.com/davidystephenson/context-creator#readme"
+  "homepage": "https://github.com/davidystephenson/context-creator#readme",
+  "keyword": [
+    "react",
+    "state",
+    "store",
+    "context",
+    "context-creator",
+    "functional"
+  ]
 }
