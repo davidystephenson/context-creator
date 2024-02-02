@@ -30,7 +30,7 @@
   "main": "dist/context-creator.cjs",
   "types": "dist/context-creator.d.cts",
   "license": "Unlicense",
-  "description": "A functional approach to creating React contexts and providers.",
+  "description": "A functional approach to creating React contexts and providers",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/davidystephenson/context-creator.git"
