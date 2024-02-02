@@ -305,7 +305,7 @@ function CounterConsumer () {
 ### App.tsx
 
 ```TSX
-import { CounterProvider } from './contexts/counter'
+import { CounterProvider } from './context/counter'
 import CounterConsumer from './component/CounterConsumer'
 
 function App() {
