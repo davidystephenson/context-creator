@@ -40,7 +40,7 @@
     "url": "https://github.com/davidystephenson/context-creator/issues"
   },
   "homepage": "https://github.com/davidystephenson/context-creator#readme",
-  "keyword": [
+  "keywords": [
     "react",
     "state",
     "store",
