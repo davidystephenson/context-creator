@@ -57,6 +57,8 @@ Creating and using React contexts out of the box requires repeating boilerplate 
 
 ### Without Context Creator
 
+#### context/counter.tsx
+
 ```TSX
 import { createContext, useContext } from 'react'
 
@@ -65,9 +67,9 @@ interface CounterContextValue {
   increment: () => void
 }
 
-const counterContext = createContext<CounterContextValue | undefined>(undefined)
+export const counterContext = createContext<CounterContextValue | undefined>(undefined)
 
-function useCounter (): CounterContextValue {
+export function useCounter (): CounterContextValue {
   const value = useContext(counterContext)
   if (value == null) {
     const message = `useContext must be used within a Provider`
@@ -76,7 +78,7 @@ function useCounter (): CounterContextValue {
   return value
 }
 
-function CounterProvider (props: {
+export function CounterProvider (props: {
   initialCount: number
 }): JSX.Element {
   const [count, setCount] = useState(props.initialCount)
@@ -90,7 +92,11 @@ function CounterProvider (props: {
     </createdContext.Provider>
   )
 }
+```
 
+#### component/CounterConsumer.tsx
+
+```TSX
 function CounterConsumer () {
   const counter = useCounter()
   return (
@@ -100,7 +106,11 @@ function CounterConsumer () {
     </>
   )
 }
+```
 
+#### App.tsx
+
+```TSX
 function App() {
   return (
     <CounterProvider initialCount={5}>
@@ -132,10 +142,13 @@ The provider's props will be passed to `useValue`, and whatever `useValue` retur
 `contextCreator` will return an object of type `ContextCreation`.
 The object includes properties for the provider and hooks to consume the context.
 `ContextCreation` is a generic type that can be imported from the `context-creator` package.
+The functions `contextCreator` returns can be immediately destructured, aliased, and exported in a single statement.
 
 ### With Context Creator
 
-```TSX
+#### context/counter.ts
+
+```TypeScript
 import contextCreator from 'context-creator'
 
 function useValue (props: {
@@ -151,11 +164,17 @@ function useValue (props: {
 
 export const {
   useContext: useCounter,
-  Provider: CounterProvider, 
+  Provider: CounterProvider
 } = contextCreator({ name: 'counter', useValue })
+```
+
+#### component/CounterConsumer.tsx
+
+```TSX
+import { useCounter} from '../context/counter'
 
 function CounterConsumer () {
-  const counter = useCounter()
+  const counter = useContext()
   return (
     <>
       Count: {counter.count}
@@ -163,6 +182,13 @@ function CounterConsumer () {
     </>
   )
 }
+```
+
+#### App.tsx
+
+```TSX
+import { CounterProvider } from './context/counter'
+import CounterConsumer from './component/CounterConsumer'
 
 function App() {
   return (
@@ -218,101 +244,6 @@ function App() {
       {/* Renders "Unknown counter" with no error */}
       <OptionalConsumer />
     </>
-  )
-}
-```
-
-## Multi-file syntax
-
-In a minimal implementation, `contextCreator` can be called and used in a single file without destructuring:
-
-```TSX
-import contextCreator from 'context-creator'
-
-function useValue (props: {
-  initialCount: number
-}) {
-  const [count, setCount] = useState(props.initialCount)
-  function increment () {
-    setCount(current => current + 1)
-  }
-  const value = { count, increment }
-  return value
-}
-
-const counterCreation = contextCreator({ name: 'counter', useValue })
-
-function CounterConsumer () {
-  const counter = counterCreation.useContext()
-  return (
-    <>
-      Count: {counter.count}
-      <button onClick={counter.increment}>Increment</button>
-    </>
-  )
-}
-
-function App() {
-  return (
-    <counterCreation.Provider initialCount={5}>
-      <CounterConsumer />
-    </counterCreation.Provider>
-  )
-}
-```
-
-Typically the context is created in its own file and exported.
-The functions `contextCreator` returns can be immediately destructured, aliased, and exported in a single statement.
-
-### context/counter.ts
-
-```TypeScript
-import contextCreator from 'context-creator'
-
-function useValue (props: {
-  initialCount: number
-}) {
-  const [count, setCount] = useState(props.initialCount)
-  function increment () {
-    setCount(current => current + 1)
-  }
-  const value = { count, increment }
-  return value
-}
-
-export const {
-  useContext: useCounter,
-  Provider: CounterProvider
-} = contextCreator({ name: 'counter', useValue })
-```
-
-### component/CounterConsumer.tsx
-
-```TSX
-import { useCounter} from '../context/counter'
-
-function CounterConsumer () {
-  const counter = useContext()
-  return (
-    <>
-      Count: {counter.count}
-      <button onClick={counter.increment}>Increment</button>
-    </>
-  )
-}
-```
-
-### App.tsx
-
-```TSX
-import { CounterProvider } from './context/counter'
-import CounterConsumer from './component/CounterConsumer'
-
-function App() {
-  return (
-    <CounterProvider initialCount={5}>
-      <CounterConsumer />
-    </CounterProvider>
   )
 }
 ```
