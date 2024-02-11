@@ -67,7 +67,7 @@ interface CounterContextValue {
   increment: () => void
 }
 
-export const counterContext = createContext<CounterContextValue | undefined>(undefined)
+const counterContext = createContext<CounterContextValue | undefined>(undefined)
 
 export function useCounter (): CounterContextValue {
   const value = useContext(counterContext)
@@ -97,7 +97,9 @@ export function CounterProvider (props: {
 #### component/CounterConsumer.tsx
 
 ```TSX
-function CounterConsumer () {
+import { useCounter } from '../context/counter'
+
+export default function CounterConsumer () {
   const counter = useCounter()
   return (
     <>
@@ -111,7 +113,10 @@ function CounterConsumer () {
 #### App.tsx
 
 ```TSX
-function App() {
+import { CounterProvider } from './context/counter'
+import CounterConsumer from './component/CounterConsumer'
+
+export default function App() {
   return (
     <CounterProvider initialCount={5}>
       <CounterConsumer />
@@ -173,7 +178,7 @@ export const {
 ```TSX
 import { useCounter} from '../context/counter'
 
-function CounterConsumer () {
+export default function CounterConsumer () {
   const counter = useContext()
   return (
     <>
@@ -190,7 +195,7 @@ function CounterConsumer () {
 import { CounterProvider } from './context/counter'
 import CounterConsumer from './component/CounterConsumer'
 
-function App() {
+export default function App() {
   return (
     <CounterProvider initialCount={5}>
       <CounterConsumer />
