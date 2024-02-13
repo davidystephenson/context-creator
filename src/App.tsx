@@ -1,12 +1,10 @@
-import TestConsumer from "./test-consumer"
-import { TestProvider } from "./test-context"
+import TestConsumer from './test-consumer'
+import { TestProvider } from './test-context'
 
-function App() {
+export default function App (): JSX.Element {
   return (
     <TestProvider n={5}>
       <TestConsumer />
     </TestProvider>
   )
 }
-
-export default App
