@@ -32,7 +32,9 @@ export const {
   Wrapper: (props) => (
     <WrapperProvider>
       <WrapperConsumer>
-        <div {...props} />
+        <div style={{ padding: `${props.n}px` }}>
+          {props.children}
+        </div>
       </WrapperConsumer>
     </WrapperProvider>
   )

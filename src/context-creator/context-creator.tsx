@@ -6,8 +6,8 @@ export * from './context-creator-types'
 export function contextCreator<ContextValue, HookProps> (props: {
   useValue: (props: HookProps) => ContextValue
   name: string
-  Wrapper?: React.ComponentType<{ children: React.ReactNode }>
-  InnerWrapper?: React.ComponentType<{ children: React.ReactNode }>
+  Wrapper?: React.ComponentType<{ children: React.ReactNode } & HookProps>
+  InnerWrapper?: React.ComponentType<{ children: React.ReactNode } & HookProps>
 }): ContextCreation<ContextValue, HookProps> {
   const createdContext = React.createContext<ContextValue | undefined>(undefined)
 
@@ -38,7 +38,7 @@ export function contextCreator<ContextValue, HookProps> (props: {
     }
     return (
       <createdContext.Provider value={value}>
-        <props.InnerWrapper>
+        <props.InnerWrapper {...consumerProps}>
           {consumerProps.children}
         </props.InnerWrapper>
       </createdContext.Provider>
@@ -51,8 +51,9 @@ export function contextCreator<ContextValue, HookProps> (props: {
         <Consumer {...providerProps} />
       )
     }
+
     return (
-      <props.Wrapper>
+      <props.Wrapper {...providerProps}>
         <Consumer {...providerProps} />
       </props.Wrapper>
     )
