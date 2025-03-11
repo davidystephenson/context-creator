@@ -182,7 +182,7 @@ export default function App() {
 }
 ```
 
-## `.useMaybe`
+## .useMaybe
 
 The `.use` hook will throw an error if used outside a provider. If you need to consume the context in a component that might be rendered outside a provider, call the `.useMaybe` hook.
 
@@ -228,7 +228,7 @@ function App() {
 }
 ```
 
-## `ContextCreation`
+## ContextCreation
 
 `contextCreator` returns an object of type `ContextCreation`. `ContextCreation` is a generic type that can be imported from the `context-creator` package. `ContextCreation` takes two generic type parameters:
 
