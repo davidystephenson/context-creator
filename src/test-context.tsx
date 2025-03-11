@@ -24,7 +24,7 @@ function useValue (props: TestProviderProps): TestContextValue {
 }
 
 export const {
-  useContext: useTest,
+  use: useTest,
   Provider: TestProvider
 } = contextCreator({
   name: 'test',

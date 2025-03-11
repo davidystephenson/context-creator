@@ -11,37 +11,32 @@ npm install context-creator
 ```TSX
 import contextCreator from 'context-creator'
 
-function useValue (props: {
-  initialCount: number
-}) {
-  const [count, setCount] = useState(props.initialCount)
-  function increment () {
-    setCount(current => current + 1)
+const counterContext = contextCreator({
+  name: 'counter',
+  useValue (props: { initialCount: number }) {
+    const [count, setCount] = useState(props.initialCount)
+    function increment () {
+      setCount(current => current + 1)
+    }
+    const value = { count, increment }
+    return value
   }
-  const value = { count, increment }
-  return value
-}
-
-export const {
-  useContext: useCounter,
-  Provider: CounterProvider, 
-} = contextCreator({ name: 'counter', useValue })
+})
 
 function CounterConsumer () {
-  const counter = useCounter()
+  const counter = counterContext.use()
   return (
-    <>
-      Count: {counter.count}
-      <button onClick={counter.increment}>Increment</button>
-    </>
+    <button onClick={counter.increment}>
+      {counter.count}
+    </button>
   )
 }
 
 function App() {
   return (
-    <CounterProvider initialCount={5}>
+    <counterContext.Provider initialCount={5}>
       <CounterConsumer />
-    </CounterProvider>
+    </counterContext.Provider>
   )
 }
 ```
@@ -52,8 +47,8 @@ Creating and using React contexts out of the box requires repeating boilerplate 
 
 * defining a context type
 * creating a context
-* defining a hook to consume the context
 * defining a provider component that wraps the internal context provider
+* defining a hook to consume the context
 
 ### Without Context Creator
 
@@ -69,15 +64,6 @@ interface CounterContextValue {
 
 const counterContext = createContext<CounterContextValue | undefined>(undefined)
 
-export function useCounter (): CounterContextValue {
-  const value = useContext(counterContext)
-  if (value == null) {
-    const message = `useContext must be used within a Provider`
-    throw new Error(message)
-  }
-  return value
-}
-
 export function CounterProvider (props: {
   initialCount: number
 }): JSX.Element {
@@ -92,6 +78,15 @@ export function CounterProvider (props: {
     </createdContext.Provider>
   )
 }
+
+export function useCounterContext (): CounterContextValue {
+  const value = useContext(counterContext)
+  if (value == null) {
+    const message = `useCounterContext must be used within a Provider`
+    throw new Error(message)
+  }
+  return value
+}
 ```
 
 #### component/CounterConsumer.tsx
@@ -102,10 +97,9 @@ import { useCounter } from '../context/counter'
 export default function CounterConsumer () {
   const counter = useCounter()
   return (
-    <>
-      Count: {counter.count}
-      <button onClick={counter.increment}>Increment</button>
-    </>
+    <button onClick={counter.increment}>
+      {counter.count}
+    </button>
   )
 }
 ```
@@ -127,27 +121,16 @@ export default function App() {
 
 ## Solution
 
-Context creator minimizes this boilerplate.
-The `contextCreator` function defines the context, the provider, and consuming hooks for you.
-For TypeScript developers, it also infers the type of the context value and the provider's props.
+Context creator minimizes this boilerplate. The `contextCreator` function defines the context, the provider, and consuming hooks for you. For TypeScript developers, it also infers the type of the context value and the provider's props.
 
-You define a hook named `useValue`.
-The hook should take a single argument to receive the props passed to the created provider.
-`contextCreator` will infer the type of the created Provider's props from this argument.
-`useValue`'s return value will be the passed to the internal context provider as it's `value` prop that can be consumed by any child component.
-`contextCreator` will infer the type of the created context's value from this return value.
-`contextCreator` also creates a hook that returns the provided context value or throw an error if called outside of a provider.
+`contextCreator` returns an object with a `.Provider` component and a `.use` hook to consume the context. To create the provider and hooks, call `contextCreator` and pass a single object with two parameters:
 
-To create the provider and hooks, call `contextCreator` and pass a single object with two properties: `name` and `useValue`.
+* `name`, a string is used to identify the context in error messages.
+* `useValue`, a hook that will be called inside the provider.
 
-* `name` should be a string is used to identify the context in error messages.
-* `useValue` should be a hook that will be called inside the provider.
-The provider's props will be passed to `useValue`, and whatever `useValue` returns will be provided to the context.
+The `useValue` hook should take a single argument to receive the props passed to the created provider. The provider's props will be passed to `useValue`. `contextCreator` will infer the type of the created Provider's props from `useValue`'s argument.
 
-`contextCreator` will return an object of type `ContextCreation`.
-The object includes properties for the provider and hooks to consume the context.
-`ContextCreation` is a generic type that can be imported from the `context-creator` package.
-The functions `contextCreator` returns can be immediately destructured, aliased, and exported in a single statement.
+`useValue`'s return value can be consumed by any child of the provider. `contextCreator` will infer the type of the created context's value from `useValue`'s return.
 
 ### With Context Creator
 
@@ -156,35 +139,30 @@ The functions `contextCreator` returns can be immediately destructured, aliased,
 ```TypeScript
 import contextCreator from 'context-creator'
 
-function useValue (props: {
-  initialCount: number
-}) {
-  const [count, setCount] = useState(props.initialCount)
-  function increment () {
-    setCount(current => current + 1)
+export const counterContext = contextCreator({
+  name: 'counter',
+  useValue: (props: { initialCount: number }) => {
+    const [count, setCount] = useState(props.initialCount)
+    function increment () {
+      setCount(current => current + 1)
+    }
+    const value = { count, increment }
+    return value
   }
-  const value = { count, increment }
-  return value
-}
-
-export const {
-  useContext: useCounter,
-  Provider: CounterProvider
-} = contextCreator({ name: 'counter', useValue })
+})
 ```
 
 #### component/CounterConsumer.tsx
 
 ```TSX
-import { useCounter} from '../context/counter'
+import { counterContext } from '../context/counter'
 
 export default function CounterConsumer () {
-  const counter = useContext()
+  const counter = counterContext.use()
   return (
-    <>
-      Count: {counter.count}
-      <button onClick={counter.increment}>Increment</button>
-    </>
+    <button onClick={counter.increment}>
+      {counter.count}
+    </button>
   )
 }
 ```
@@ -192,47 +170,44 @@ export default function CounterConsumer () {
 #### App.tsx
 
 ```TSX
-import { CounterProvider } from './context/counter'
+import { counterContext } from './context/counter'
 import CounterConsumer from './component/CounterConsumer'
 
 export default function App() {
   return (
-    <CounterProvider initialCount={5}>
+    <counterContext.Provider initialCount={5}>
       <CounterConsumer />
-    </CounterProvider>
+    </counterContext.Provider>
   )
 }
 ```
 
-## Optional consumption
+## `.useMaybe`
 
-The created `useContext` hook will throw an error if used outside a provider.
-If you need to consume the context in a component that might be rendered outside a provider, call the `useOptionalContext` hook also returned by `contextCreator`.
+The `.use` hook will throw an error if used outside a provider. If you need to consume the context in a component that might be rendered outside a provider, call the `.useMaybe` hook.
 
 ```TSX
 import contextCreator from 'context-creator'
 
-function useValue (props: {
-  initialCount: number
-}) {
-  const [count, setCount] = useState(props.initialCount)
-  const value = { count, setCount }
-  return value
-}
-
-const {
-  useContext: useCounter,
-  useOptionalContext: useOptionalCounter,
-  Provider: CounterProvider, 
-} = contextCreator({ name: 'counter', useValue })
+const counterContext = contextCreator({
+  name: 'counter',
+  useValue (props: { initialCount: number }) {
+    const [count, setCount] = useState(props.initialCount)
+    function increment () {
+      setCount(current => current + 1)
+    }
+    const value = { count, increment }
+    return value
+  }
+})
 
 function RequiredConsumer () {
-  const counter = useCounter()
+  const counter = counterContext.use()
   return <>Count: {counter.count}</>
 }
 
 function OptionalConsumer () {
-  const counter = useOptionalCounter()
+  const counter = counterContext.useMaybe()
   if (counter == null) {
     return <>Unknown counter</>
   }
@@ -250,5 +225,20 @@ function App() {
       <OptionalConsumer />
     </>
   )
+}
+```
+
+## `ContextCreation`
+
+`contextCreator` returns an object of type `ContextCreation`. `ContextCreation` is a generic type that can be imported from the `context-creator` package. `ContextCreation` takes two generic type parameters:
+
+* `ContextValue`, the type of the context value returned by the `useValue` hook.
+* `ProviderProps`, the type of the props passed to the created provider.
+
+```TypeScript
+export interface ContextCreation <ContextValue, ProviderProps> {
+  use: () => ContextValue
+  useMaybe: () => ContextValue | undefined
+  Provider: React.FC<{ children: ReactNode } & ProviderProps>
 }
 ```

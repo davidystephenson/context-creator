@@ -16,7 +16,7 @@ function useValue (): WrapperValue {
 }
 
 export const {
-  useContext: useWrapper,
+  use: useWrapper,
   Provider: WrapperProvider
 } = contextCreator({
   name: 'wrapper',

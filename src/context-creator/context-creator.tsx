@@ -60,8 +60,8 @@ export function contextCreator<ContextValue, HookProps> (props: {
   }
 
   return {
-    useContext,
-    useOptionalContext,
+    use: useContext,
+    useMaybe: useOptionalContext,
     Provider
   }
 }
