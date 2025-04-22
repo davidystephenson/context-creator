@@ -23,10 +23,7 @@ function useValue (props: TestProviderProps): TestContextValue {
   return value
 }
 
-export const {
-  use: useTest,
-  Provider: TestProvider
-} = contextCreator({
+export const context = contextCreator({
   name: 'test',
   useValue,
   Wrapper: (props) => (
