@@ -1,5 +1,5 @@
 import React from 'react'
-import { ContextCreation } from './context-creator-types'
+import { ContextCreation, MaybeValue, MissingValue } from './context-creator-types'
 
 export * from './context-creator-types'
 
@@ -9,20 +9,29 @@ export function contextCreator<ContextValue, HookProps> (props: {
   Wrapper?: React.ComponentType<{ children: React.ReactNode } & HookProps>
   InnerWrapper?: React.ComponentType<{ children: React.ReactNode } & HookProps>
 }): ContextCreation<ContextValue, HookProps> {
-  const createdContext = React.createContext<ContextValue | undefined>(undefined)
+  const createdContext = React.createContext<ContextValue | typeof MissingValue>(MissingValue)
 
   function useContext (): ContextValue {
     const value = React.useContext(createdContext)
-    if (value == null) {
+    if (value === MissingValue) {
       const message = `(${props.name}) useContext must be used within a Provider`
       throw new Error(message)
     }
     return value
   }
 
-  function useOptionalContext (): ContextValue | undefined {
+  function useOptionalContext (): MaybeValue<ContextValue> {
     const value = React.useContext(createdContext)
-    return value
+    if (value === MissingValue) {
+      return {
+        value: undefined,
+        provided: false
+      }
+    }
+    return {
+      value,
+      provided: true
+    }
   }
 
   type ProviderProps = HookProps & { children: React.ReactNode }

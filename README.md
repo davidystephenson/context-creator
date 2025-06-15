@@ -208,10 +208,10 @@ function RequiredConsumer () {
 
 function OptionalConsumer () {
   const counter = counterContext.useMaybe()
-  if (counter == null) {
+  if (!counter.provided) {
     return <>Unknown counter</>
   }
-  return <>Count: {counter.count}</>
+  return <>Count: {counter.value.count}</>
 }
 
 function App() {
@@ -228,7 +228,28 @@ function App() {
 }
 ```
 
-## ContextCreation
+### `MaybeValue`
+
+`.useMaybe` returns an object with two properties:
+
+* `value`, the context value if it is provided.
+* `provided`, a boolean indicating if the context is provided.
+
+If `provided` is `false`, `value` is `undefined`. If `provided` is `true`, `value` is the context value. The type signature of `MaybeValue` is:
+
+```TypeScript
+interface ProvidedValue <ContextValue> {
+  value: ContextValue
+  provided: true
+}
+interface UnprovidedValue {
+  value: undefined
+  provided: false
+}
+type MaybeValue <ContextValue> = ProvidedValue<ContextValue> | UnprovidedValue
+```
+
+## `ContextCreation`
 
 `contextCreator` returns an object of type `ContextCreation`. `ContextCreation` is a generic type that can be imported from the `context-creator` package. `ContextCreation` takes two generic type parameters:
 
