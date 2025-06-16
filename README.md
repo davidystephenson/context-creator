@@ -182,6 +182,21 @@ export default function App() {
 }
 ```
 
+### `ContextCreation`
+ 
+`contextCreator` returns an object of type `ContextCreation`, which takes two generic type parameters:
+
+* `ContextValue`, the type of the context value returned by the `useValue` hook.
+* `ProviderProps`, the type of the props passed to the created provider.
+
+```TypeScript
+interface ContextCreation <ContextValue, ProviderProps> {
+  use: () => ContextValue
+  useMaybe: () => ContextValue | undefined
+  Provider: React.FC<{ children: ReactNode } & ProviderProps>
+}
+```
+
 ## .useMaybe
 
 The `.use` hook will throw an error if used outside a provider. If you need to consume the context in a component that might be rendered outside a provider, call the `.useMaybe` hook.
@@ -247,19 +262,4 @@ interface UnprovidedValue {
   provided: false
 }
 type MaybeValue <ContextValue> = ProvidedValue<ContextValue> | UnprovidedValue
-```
-
-## `ContextCreation`
-
-`contextCreator` returns an object of type `ContextCreation`. `ContextCreation` is a generic type that can be imported from the `context-creator` package. `ContextCreation` takes two generic type parameters:
-
-* `ContextValue`, the type of the context value returned by the `useValue` hook.
-* `ProviderProps`, the type of the props passed to the created provider.
-
-```TypeScript
-export interface ContextCreation <ContextValue, ProviderProps> {
-  use: () => ContextValue
-  useMaybe: () => ContextValue | undefined
-  Provider: React.FC<{ children: ReactNode } & ProviderProps>
-}
 ```
