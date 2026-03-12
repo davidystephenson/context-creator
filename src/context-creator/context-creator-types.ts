@@ -16,7 +16,7 @@ export type MaybeValue <ContextValue> = ProvidedValue<ContextValue> | Unprovided
 
 export interface ContextCreation <ContextValue, ProviderProps> {
   context: React.Context<ContextValue | typeof MissingValue>
-  use: () => ContextValue
+  useValue: () => ContextValue
   useMaybe: () => MaybeValue<ContextValue>
   Provider: React.FC<{ children: ReactNode } & ProviderProps>
 }
