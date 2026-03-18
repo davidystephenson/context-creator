@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { ContextCreation, MaybeValue, MissingValue } from './context-creator-types'
 
